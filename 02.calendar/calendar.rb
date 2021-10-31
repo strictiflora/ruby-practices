@@ -22,7 +22,7 @@ first_date = Date.new(date.year, date.month)
 last_date = Date.new(date.year, date.month, -1)
 
 puts "      #{date.month}月 #{date.year}"
-%W(日 月 火 水 木 金 土 \n).each {|day_of_week| print "#{day_of_week} "}
+puts '日 月 火 水 木 金 土'
 
 days = []
 (first_date..last_date).each do |i|
@@ -35,22 +35,18 @@ end
 
 newline_index = days.index("\n")
 #カレンダー1行目が７日より少ない場合に位置を曜日合わせる
-if newline_index < 7
-  (7 - newline_index).times do
-    days.unshift "   "
-  end
+arr = []
+(7 - newline_index).times do
+  arr << "  "
 end
 
+print "#{arr.join(' ')} " unless newline_index == 7
+
 days.each do |n|
-  if n == "   "
-    print n 
-  elsif n == "\n"
+  if n == "\n"
     print n
-  elsif n == 1
-    printf("%d%s", n, "\s")
   elsif n == Date.today.day && date == Date.today
-    print Paint[n, :inverse]
-    print ' '
+    print "#{Paint[n, :inverse]} "
   else
     printf("%2d%s", n, "\s")
   end
