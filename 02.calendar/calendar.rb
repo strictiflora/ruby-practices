@@ -24,30 +24,15 @@ last_date = Date.new(date.year, date.month, -1)
 puts "      #{date.month}月 #{date.year}"
 puts '日 月 火 水 木 金 土'
 
-days = []
+first_date.wday.times {print "   "}
+
 (first_date..last_date).each do |i|
   day = i.day
-  days << day
   if i.saturday?
-    days << "\n"
-  end
-end
-
-newline_index = days.index("\n")
-#カレンダー1行目が７日より少ない場合に位置を曜日合わせる
-arr = []
-(7 - newline_index).times do
-  arr << "  "
-end
-
-print "#{arr.join(' ')} " unless newline_index == 7
-
-days.each do |n|
-  if n == "\n"
-    print n
-  elsif n == Date.today.day && date == Date.today
-    print "#{Paint[n, :inverse]} "
+    printf("%2d\n", day)
+  elsif day == Date.today.day && date == Date.today
+    print day < 7 ? " #{Paint[day, :inverse]} " : "#{Paint[day, :inverse]} "
   else
-    printf("%2d%s", n, "\s")
+    printf("%2d%s", day, "\s")
   end
 end
