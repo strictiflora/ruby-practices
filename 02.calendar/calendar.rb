@@ -33,6 +33,6 @@ first_date.wday.times {print "   "}
   elsif day == Date.today.day && date == Date.today
     print day < 7 ? " #{Paint[day, :inverse]} " : "#{Paint[day, :inverse]} "
   else
-    printf("%2d%s", day, "\s")
+    printf("%2d\s", day,)
   end
 end
