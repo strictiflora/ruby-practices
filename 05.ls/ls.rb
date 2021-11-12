@@ -27,7 +27,7 @@ end
 
 def ls
   params = {}
-  gain_option(params)
+  receive_option(params)
 
   dirs_and_files = if params[:a]
                      Dir.glob('*', File::FNM_DOTMATCH)
