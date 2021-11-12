@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+NUM_OF_ROWS = 3
+
 def adjust_digits(columns)
   columns.each do |column|
     column.map! do |dir_or_file|
@@ -14,8 +16,6 @@ def display_columns(columns)
     puts row.join('      ')
   end
 end
-
-NUM_OF_ROWS = 3
 
 def ls
   dirs_and_files = Dir.glob('*')
