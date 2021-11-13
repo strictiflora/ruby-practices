@@ -13,7 +13,7 @@ end
 def adjust_digits(columns)
   columns.each do |column|
     column.map! do |dir_or_file|
-      digit = column.max_by(&:length).length
+      digit = column.compact.max_by(&:length).length
       format("%-#{digit}s", dir_or_file) unless dir_or_file == ''
     end
   end
