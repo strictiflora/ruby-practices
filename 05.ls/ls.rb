@@ -4,10 +4,12 @@ require 'optparse'
 
 NUM_OF_ROWS = 3
 
-def receive_option(params)
+def receive_option_a
   opt = OptionParser.new
+  params = {}
   opt.on('-a', '--all', 'Include directory entries whose names begin with a dot') { |v| params[:a] = v }
   opt.parse!(ARGV)
+  params[:a]
 end
 
 def adjust_digits(columns)
@@ -26,10 +28,7 @@ def display_columns(columns)
 end
 
 def ls
-  params = {}
-  receive_option(params)
-
-  dirs_and_files = if params[:a]
+  dirs_and_files = if receive_option_a
                      Dir.glob('*', File::FNM_DOTMATCH)
                    else
                      Dir.glob('*')
