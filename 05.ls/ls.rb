@@ -1,11 +1,21 @@
 # frozen_string_literal: true
 
+require 'optparse'
+
 NUM_OF_ROWS = 3
+
+def receive_option_a
+  opt = OptionParser.new
+  params = {}
+  opt.on('-a', '--all', 'Include directory entries whose names begin with a dot') { |v| params[:a] = v }
+  opt.parse!(ARGV)
+  params[:a]
+end
 
 def adjust_digits(columns)
   columns.each do |column|
     column.map! do |dir_or_file|
-      digit = column.max_by(&:length).length
+      digit = column.compact.max_by(&:length).length
       format("%-#{digit}s", dir_or_file) unless dir_or_file == ''
     end
   end
@@ -18,7 +28,12 @@ def display_columns(columns)
 end
 
 def ls
-  dirs_and_files = Dir.glob('*')
+  dirs_and_files = if receive_option_a
+                     Dir.glob('*', File::FNM_DOTMATCH)
+                   else
+                     Dir.glob('*')
+                   end
+
   unless (dirs_and_files.size % NUM_OF_ROWS).zero?
     (NUM_OF_ROWS - dirs_and_files.size % NUM_OF_ROWS).times do
       dirs_and_files << ''
