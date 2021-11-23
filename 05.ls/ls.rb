@@ -4,18 +4,18 @@ require 'optparse'
 
 NUM_OF_ROWS = 3
 
-def receive_option_a
+def receive_options
   opt = OptionParser.new
   params = {}
-  opt.on('-a', '--all', 'Include directory entries whose names begin with a dot') { |v| params[:a] = v }
+  opt.on('-r', '--reverse', 'reverse') { |v| params[:r] = v }
   opt.parse!(ARGV)
-  params[:a]
+  params
 end
 
 def adjust_digits(columns)
   columns.each do |column|
+    digit = column.max_by(&:length).length
     column.map! do |dir_or_file|
-      digit = column.compact.max_by(&:length).length
       format("%-#{digit}s", dir_or_file) unless dir_or_file == ''
     end
   end
@@ -27,12 +27,11 @@ def display_columns(columns)
   end
 end
 
-def ls
-  dirs_and_files = if receive_option_a
-                     Dir.glob('*', File::FNM_DOTMATCH)
-                   else
-                     Dir.glob('*')
-                   end
+def ls(params)
+  dirs_and_files = Dir.glob('*')
+
+  dirs_and_files.sort!
+  dirs_and_files.reverse! if params[:r]
 
   unless (dirs_and_files.size % NUM_OF_ROWS).zero?
     (NUM_OF_ROWS - dirs_and_files.size % NUM_OF_ROWS).times do
@@ -49,4 +48,4 @@ def ls
   display_columns(columns)
 end
 
-ls
+ls(receive_options)
