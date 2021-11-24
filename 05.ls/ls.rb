@@ -124,7 +124,7 @@ def ls_long_format
     files_with_stat << file_with_stat
   end
 
-  puts "total #{blocks}" unless files
+  puts "total #{blocks}" unless files.empty?
   display_files(files_with_stat, file_nlinks, file_sizes)
 end
 
