@@ -38,8 +38,10 @@ def ls(params)
   end
 
   columns = []
-  files.each_slice(files.size / NUM_OF_ROWS) do |column|
-    columns << column
+  unless files.empty?
+    files.each_slice(files.size / NUM_OF_ROWS) do |column|
+      columns << column
+    end
   end
 
   adjust_digits(columns)
@@ -122,7 +124,7 @@ def ls_long_format
     files_with_stat << file_with_stat
   end
 
-  puts "total #{blocks}"
+  puts "total #{blocks}" unless files
   display_files(files_with_stat, file_nlinks, file_sizes)
 end
 
