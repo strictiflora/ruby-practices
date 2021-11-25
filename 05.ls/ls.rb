@@ -33,21 +33,25 @@ end
 def ls(params)
   files = Dir.glob('*', sort: true)
 
-  unless (files.size % NUM_OF_ROWS).zero?
-    (NUM_OF_ROWS - files.size % NUM_OF_ROWS).times do
-      files << ''
+  if params[:l]
+    ls_long_format
+  else
+    unless (files.size % NUM_OF_ROWS).zero?
+      (NUM_OF_ROWS - files.size % NUM_OF_ROWS).times do
+        files << ''
+      end
     end
-  end
 
-  columns = []
-  unless files.empty?
-    files.each_slice(files.size / NUM_OF_ROWS) do |column|
-      columns << column
+    columns = []
+    unless files.empty?
+      files.each_slice(files.size / NUM_OF_ROWS) do |column|
+        columns << column
+      end
     end
-  end
 
-  adjusted_columns = adjust_digits(columns)
-  params[:l] ? ls_long_format : display_columns(adjusted_columns)
+    adjusted_columns = adjust_digits(columns)
+    display_columns(adjusted_columns)
+  end
 end
 
 def change_filetype_notation(file_with_stat)
