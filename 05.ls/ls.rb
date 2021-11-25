@@ -14,12 +14,14 @@ def receive_options
 end
 
 def adjust_digits(columns)
+  adjusted_columns = []
   columns.each do |column|
-    column.map! do |dir_or_file|
-      digit = column.compact.max_by(&:length).length
+    digit = column.max_by(&:length).length
+    adjusted_columns << column.map do |dir_or_file|
       format("%-#{digit}s", dir_or_file) unless dir_or_file == ''
     end
   end
+  adjusted_columns
 end
 
 def display_columns(columns)
@@ -44,8 +46,8 @@ def ls(params)
     end
   end
 
-  adjust_digits(columns)
-  params[:l] ? ls_long_format : display_columns(columns)
+  adjusted_columns = adjust_digits(columns)
+  params[:l] ? ls_long_format : display_columns(adjusted_columns)
 end
 
 def change_filetype_notation(file_with_stat)
