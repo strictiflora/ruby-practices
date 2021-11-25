@@ -24,8 +24,21 @@ def adjust_digits(columns)
   adjusted_columns
 end
 
-def display_columns(columns)
-  columns.transpose.each do |row|
+def ls_without_options(files)
+  unless (files.size % NUM_OF_ROWS).zero?
+    (NUM_OF_ROWS - files.size % NUM_OF_ROWS).times do
+      files << ''
+    end
+  end
+
+  columns = []
+  unless files.empty?
+    files.each_slice(files.size / NUM_OF_ROWS) do |column|
+      columns << column
+    end
+  end
+
+  adjust_digits(columns).transpose.each do |row|
     puts row.join('      ')
   end
 end
@@ -33,25 +46,7 @@ end
 def ls(params)
   files = Dir.glob('*', sort: true)
 
-  if params[:l]
-    ls_long_format
-  else
-    unless (files.size % NUM_OF_ROWS).zero?
-      (NUM_OF_ROWS - files.size % NUM_OF_ROWS).times do
-        files << ''
-      end
-    end
-
-    columns = []
-    unless files.empty?
-      files.each_slice(files.size / NUM_OF_ROWS) do |column|
-        columns << column
-      end
-    end
-
-    adjusted_columns = adjust_digits(columns)
-    display_columns(adjusted_columns)
-  end
+  params[:l] ? ls_long_format(files) : ls_without_options(files)
 end
 
 def change_file_type_notation(file_type)
@@ -83,7 +78,7 @@ def change_mode_notation(file_mode)
   mode.join
 end
 
-def display_files(files_with_stat, file_nlinks, file_sizes)
+def display_file_details(files_with_stat, file_nlinks, file_sizes)
   files_with_stat.each do |file_with_stat|
     file_types = change_file_type_notation(file_with_stat[0][0, 3])
     file_modes = change_mode_notation(file_with_stat[0][3, 3])
@@ -96,8 +91,7 @@ def display_files(files_with_stat, file_nlinks, file_sizes)
   end
 end
 
-def ls_long_format
-  files = Dir.glob('*', sort: true)
+def ls_long_format(files)
   files_with_stat = []
   file_nlinks = []
   file_sizes = []
@@ -120,7 +114,7 @@ def ls_long_format
   end
 
   puts "total #{blocks}" unless files.empty?
-  display_files(files_with_stat, file_nlinks, file_sizes)
+  display_file_details(files_with_stat, file_nlinks, file_sizes)
 end
 
 ls(receive_options)
