@@ -116,13 +116,19 @@ def ls_long_format
   file_sizes = []
   blocks = 0
   files.each do |file|
-    file_with_stat = []
     file_status = File.lstat(file)
     file_nlinks << file_status.nlink
     file_sizes << file_status.size
     blocks += file_status.blocks
-    file_with_stat << format('%06d ', file_status.mode.to_s(8)) << file_status.nlink << "#{Etc.getpwuid(file_status.uid).name} "\
-                   << "#{Etc.getgrgid(file_status.gid).name} " << file_status.size << file_status.mtime.strftime('%_m %e %H:%M') << file
+    file_with_stat = [
+      format('%06d ', file_status.mode.to_s(8)),
+      file_status.nlink,
+      "#{Etc.getpwuid(file_status.uid).name} ",
+      "#{Etc.getgrgid(file_status.gid).name} ",
+      file_status.size,
+      file_status.mtime.strftime('%_m %e %H:%M'),
+      file
+    ]
     files_with_stat << file_with_stat
   end
 
