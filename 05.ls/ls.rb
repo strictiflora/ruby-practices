@@ -45,7 +45,6 @@ end
 
 def ls(params)
   files = Dir.glob('*', sort: true)
-
   params[:l] ? ls_long_format(files) : ls_without_options(files)
 end
 
