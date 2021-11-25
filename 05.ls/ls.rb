@@ -54,58 +54,45 @@ def ls(params)
   end
 end
 
-def change_filetype_notation(file_with_stat)
-  case file_with_stat[0][0, 3]
-  when '010'
-    file_with_stat[0][0, 3] = 'p'
-  when '020'
-    file_with_stat[0][0, 3] = 'c'
-  when '040'
-    file_with_stat[0][0, 3] = 'd'
-  when '060'
-    file_with_stat[0][0, 3] = 'b'
-  when '100'
-    file_with_stat[0][0, 3] = '-'
-  when '120'
-    file_with_stat[0][0, 3] = 'l'
-  when '140'
-    file_with_stat[0][0, 3] = 's'
-  end
+def change_file_type_notation(file_type)
+  {
+    '010' => 'p',
+    '020' => 'c',
+    '040' => 'd',
+    '060' => 'b',
+    '100' => '-',
+    '120' => 'l',
+    '140' => 's'
+  }[file_type]
 end
 
-def change_mode_notation(file_with_stat)
-  file_with_stat[0][1..3].each_char do |char|
-    case char
-    when '0'
-      file_with_stat[0].gsub!(/0/, '---')
-    when '1'
-      file_with_stat[0].gsub!(/1/, '--x')
-    when '2'
-      file_with_stat[0].gsub!(/2/, '-w-')
-    when '3'
-      file_with_stat[0].gsub!(/3/, '-wx')
-    when '4'
-      file_with_stat[0].gsub!(/4/, 'r--')
-    when '5'
-      file_with_stat[0].gsub!(/5/, 'r-x')
-    when '6'
-      file_with_stat[0].gsub!(/6/, 'rw-')
-    when '7'
-      file_with_stat[0].gsub!(/7/, 'rwx')
-    end
+def change_mode_notation(file_mode)
+  mode = []
+  file_mode.each_char do |char|
+    mode << {
+      '0' => '---',
+      '1' => '--x',
+      '2' => '-w-',
+      '3' => '-wx',
+      '4' => 'r--',
+      '5' => 'r-x',
+      '6' => 'rw-',
+      '7' => 'rwx'
+    }[char]
   end
+  mode.join
 end
 
 def display_files(files_with_stat, file_nlinks, file_sizes)
   files_with_stat.each do |file_with_stat|
-    change_filetype_notation(file_with_stat)
-    change_mode_notation(file_with_stat)
+    file_types = change_file_type_notation(file_with_stat[0][0, 3])
+    file_modes = change_mode_notation(file_with_stat[0][3, 3])
 
     file_with_stat[1] = format("%#{file_nlinks.max.to_s.length}d", file_with_stat[1])
     file_with_stat[4] = format("%#{file_sizes.max.to_s.length}d", file_with_stat[4])
     file_with_stat << "-> #{File.readlink(file_with_stat[6].to_s)}" if file_with_stat[0][0] == 'l'
 
-    puts file_with_stat.join(' ')
+    puts "#{file_types}#{file_modes}  #{file_with_stat[1..6].join(' ')}"
   end
 end
 
