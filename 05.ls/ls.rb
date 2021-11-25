@@ -96,17 +96,13 @@ def change_mode_notation(file_with_stat)
   end
 end
 
-def find_max_digit(stat_attribute)
-  stat_attribute.max.to_s.length
-end
-
 def display_files(files_with_stat, file_nlinks, file_sizes)
   files_with_stat.each do |file_with_stat|
     change_filetype_notation(file_with_stat)
     change_mode_notation(file_with_stat)
 
-    file_with_stat[1] = format("%#{find_max_digit(file_nlinks)}d", file_with_stat[1])
-    file_with_stat[4] = format("%#{find_max_digit(file_sizes)}d", file_with_stat[4])
+    file_with_stat[1] = format("%#{file_nlinks.max.to_s.length}d", file_with_stat[1])
+    file_with_stat[4] = format("%#{file_sizes.max.to_s.length}d", file_with_stat[4])
     file_with_stat << "-> #{File.readlink(file_with_stat[6].to_s)}" if file_with_stat[0][0] == 'l'
 
     puts file_with_stat.join(' ')
