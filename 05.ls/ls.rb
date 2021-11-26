@@ -84,10 +84,22 @@ def display_file_details(files_with_stat, file_nlinks, file_sizes)
 
     file_with_stat[1] = format("%#{file_nlinks.max.to_s.length}d", file_with_stat[1])
     file_with_stat[4] = format("%#{file_sizes.max.to_s.length}d", file_with_stat[4])
-    file_with_stat << "-> #{File.readlink(file_with_stat[6].to_s)}" if file_with_stat[0][0] == 'l'
+    file_with_stat << "-> #{File.readlink(file_with_stat[6].to_s)}" if file_with_stat[0][0, 3] == '120'
 
-    puts "#{file_types}#{file_modes}  #{file_with_stat[1..6].join(' ')}"
+    puts "#{file_types}#{file_modes}  #{file_with_stat[1..].join(' ')}"
   end
+end
+
+def store_file_status(file_status, file)
+  [
+    format('%06d ', file_status.mode.to_s(8)),
+    file_status.nlink,
+    "#{Etc.getpwuid(file_status.uid).name} ",
+    "#{Etc.getgrgid(file_status.gid).name} ",
+    file_status.size,
+    file_status.mtime.strftime('%_m %e %H:%M'),
+    file
+  ]
 end
 
 def ls_long_format(files)
@@ -100,16 +112,7 @@ def ls_long_format(files)
     file_nlinks << file_status.nlink
     file_sizes << file_status.size
     blocks += file_status.blocks
-    file_with_stat = [
-      format('%06d ', file_status.mode.to_s(8)),
-      file_status.nlink,
-      "#{Etc.getpwuid(file_status.uid).name} ",
-      "#{Etc.getgrgid(file_status.gid).name} ",
-      file_status.size,
-      file_status.mtime.strftime('%_m %e %H:%M'),
-      file
-    ]
-    files_with_stat << file_with_stat
+    files_with_stat << store_file_status(file_status, file)
   end
 
   puts "total #{blocks}" unless files.empty?
