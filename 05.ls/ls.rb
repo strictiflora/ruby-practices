@@ -82,11 +82,18 @@ def display_file_details(files_with_stat, file_nlinks, file_sizes)
     file_types = change_file_type_notation(file_with_stat[0][0, 3])
     file_modes = change_mode_notation(file_with_stat[0][3, 3])
 
-    file_with_stat[1] = format("%#{file_nlinks.max.to_s.length}d", file_with_stat[1])
-    file_with_stat[4] = format("%#{file_sizes.max.to_s.length}d", file_with_stat[4])
-    file_with_stat << "-> #{File.readlink(file_with_stat[6].to_s)}" if file_with_stat[0][0, 3] == '120'
+    file_with_formatted_stat = [
+      "#{file_types}#{file_modes} ",
+      format("%#{file_nlinks.max.to_s.length}d", file_with_stat[1]),
+      file_with_stat[2],
+      file_with_stat[3],
+      format("%#{file_sizes.max.to_s.length}d", file_with_stat[4]),
+      file_with_stat[5],
+      file_with_stat[6]
+    ]
 
-    puts "#{file_types}#{file_modes}  #{file_with_stat[1..].join(' ')}"
+    file_with_formatted_stat << "-> #{File.readlink(file_with_stat[6].to_s)}" if file_with_formatted_stat[0][0] == 'l'
+    puts file_with_formatted_stat.join(' ')
   end
 end
 
