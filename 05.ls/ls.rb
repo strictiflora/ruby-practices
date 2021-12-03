@@ -14,14 +14,12 @@ def receive_options
 end
 
 def adjust_digits(columns)
-  adjusted_columns = []
-  columns.each do |column|
+  columns.map do |column|
     digit = column.max_by(&:length).length
-    adjusted_columns << column.map do |dir_or_file|
+    column.map do |dir_or_file|
       format("%-#{digit}s", dir_or_file) unless dir_or_file == ''
     end
   end
-  adjusted_columns
 end
 
 def ls_without_options(files)
@@ -61,9 +59,8 @@ def change_file_type_notation(file_type)
 end
 
 def change_mode_notation(file_mode)
-  mode = []
-  file_mode.each_char do |char|
-    mode << {
+  file_mode.chars.map do |char|
+    {
       '0' => '---',
       '1' => '--x',
       '2' => '-w-',
@@ -74,13 +71,12 @@ def change_mode_notation(file_mode)
       '7' => 'rwx'
     }[char]
   end
-  mode.join
 end
 
 def display_file_details(files_with_stat, file_nlinks, file_sizes)
   files_with_stat.each do |file_with_stat|
     file_types = change_file_type_notation(file_with_stat[0][0, 3])
-    file_modes = change_mode_notation(file_with_stat[0][3, 3])
+    file_modes = change_mode_notation(file_with_stat[0][3, 3]).join
 
     file_with_formatted_stat = [
       "#{file_types}#{file_modes} ",
