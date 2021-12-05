@@ -73,40 +73,40 @@ def change_mode_notation(file_mode)
   end
 end
 
-def display_file_details(files_with_stat, file_nlinks, file_sizes)
-  files_with_stat.each do |file_with_stat|
-    file_types = change_file_type_notation(file_with_stat[0][0, 3])
-    file_modes = change_mode_notation(file_with_stat[0][3, 3]).join
+def display_file_details(file_stats, file_nlinks, file_sizes)
+  file_stats.each do |file_stat|
+    file_types = change_file_type_notation(file_stat[:mode][0, 3])
+    file_modes = change_mode_notation(file_stat[:mode][3, 3]).join
 
-    file_with_formatted_stat = [
+    formatted_stat = [
       "#{file_types}#{file_modes} ",
-      format("%#{file_nlinks.max.to_s.length}d", file_with_stat[1]),
-      file_with_stat[2],
-      file_with_stat[3],
-      format("%#{file_sizes.max.to_s.length}d", file_with_stat[4]),
-      file_with_stat[5],
-      file_with_stat[6]
+      format("%#{file_nlinks.max.to_s.length}d", file_stat[:nlink]),
+      file_stat[:owner],
+      file_stat[:group],
+      format("%#{file_sizes.max.to_s.length}d", file_stat[:size]),
+      file_stat[:timestamp],
+      file_stat[:filename]
     ]
 
-    file_with_formatted_stat << "-> #{File.readlink(file_with_stat[6].to_s)}" if file_with_formatted_stat[0][0] == 'l'
-    puts file_with_formatted_stat.join(' ')
+    formatted_stat << "-> #{File.readlink(file_stat[:filename].to_s)}" if formatted_stat[0][0] == 'l'
+    puts formatted_stat.join(' ')
   end
 end
 
-def store_file_status(file_status, file)
-  [
-    format('%06d ', file_status.mode.to_s(8)),
-    file_status.nlink,
-    "#{Etc.getpwuid(file_status.uid).name} ",
-    "#{Etc.getgrgid(file_status.gid).name} ",
-    file_status.size,
-    file_status.mtime.strftime('%_m %e %H:%M'),
-    file
-  ]
+def to_hash(file_status, file)
+  {
+    mode: format('%06d', file_status.mode.to_s(8)),
+    nlink: file_status.nlink,
+    owner: "#{Etc.getpwuid(file_status.uid).name} ",
+    group: "#{Etc.getgrgid(file_status.gid).name} ",
+    size: file_status.size,
+    timestamp: file_status.mtime.strftime('%_m %e %H:%M'),
+    filename: file
+  }
 end
 
 def ls_long_format(files)
-  files_with_stat = []
+  file_stats = []
   file_nlinks = []
   file_sizes = []
   blocks = 0
@@ -115,11 +115,11 @@ def ls_long_format(files)
     file_nlinks << file_status.nlink
     file_sizes << file_status.size
     blocks += file_status.blocks
-    files_with_stat << store_file_status(file_status, file)
+    file_stats << to_hash(file_status, file)
   end
 
   puts "total #{blocks}" unless files.empty?
-  display_file_details(files_with_stat, file_nlinks, file_sizes)
+  display_file_details(file_stats, file_nlinks, file_sizes)
 end
 
 ls(receive_options)
