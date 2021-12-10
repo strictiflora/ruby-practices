@@ -93,7 +93,7 @@ def display_file_details(file_stats, file_nlinks, file_sizes)
   end
 end
 
-def to_hash(file_status, file)
+def build_file_stats(file_status, file)
   {
     mode: format('%06d', file_status.mode.to_s(8)),
     nlink: file_status.nlink,
@@ -115,7 +115,7 @@ def ls_long_format(files)
     file_nlinks << file_status.nlink
     file_sizes << file_status.size
     blocks += file_status.blocks
-    file_stats << to_hash(file_status, file)
+    file_stats << build_file_stats(file_status, file)
   end
 
   puts "total #{blocks}" unless files.empty?
