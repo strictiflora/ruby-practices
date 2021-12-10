@@ -8,6 +8,8 @@ NUM_OF_ROWS = 3
 def receive_options
   opt = OptionParser.new
   params = {}
+  opt.on('-a', '--all', 'Include directory entries whose names begin with a dot') { |v| params[:a] = v }
+  opt.on('-r', '--reverse', 'Reverse the order') { |v| params[:r] = v }
   opt.on('-l', '--long', 'List in long format.') { |v| params[:l] = v }
   opt.parse!(ARGV)
   params
@@ -42,7 +44,13 @@ def ls_without_options(files)
 end
 
 def ls(params)
-  files = Dir.glob('*', sort: true)
+  files = if params[:a]
+            Dir.glob('*', File::FNM_DOTMATCH, sort: true)
+          else
+            Dir.glob('*', sort: true)
+          end
+  files.reverse! if params[:r]
+
   params[:l] ? ls_long_format(files) : ls_without_options(files)
 end
 
