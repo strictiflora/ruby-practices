@@ -82,16 +82,18 @@ def change_mode_notation(file_mode)
 end
 
 def display_file_details(file_stats, file_nlinks, file_sizes)
+  nlinks_digit = file_nlinks.max.to_s.length
+  sizes_digit = file_sizes.max.to_s.length
   file_stats.each do |file_stat|
     file_types = change_file_type_notation(file_stat[:mode][0, 3])
     file_modes = change_mode_notation(file_stat[:mode][3, 3]).join
 
     formatted_stat = [
       "#{file_types}#{file_modes} ",
-      format("%#{file_nlinks.max.to_s.length}d", file_stat[:nlink]),
+      format("%#{nlinks_digit}d", file_stat[:nlink]),
       file_stat[:owner],
       file_stat[:group],
-      format("%#{file_sizes.max.to_s.length}d", file_stat[:size]),
+      format("%#{sizes_digit}d", file_stat[:size]),
       file_stat[:timestamp],
       file_stat[:filename]
     ]
