@@ -8,6 +8,8 @@ NUM_OF_ROWS = 3
 def receive_options
   opt = OptionParser.new
   params = {}
+  opt.on('-a', '--all', 'Include directory entries whose names begin with a dot') { |v| params[:a] = v }
+  opt.on('-r', '--reverse', 'Reverse the order') { |v| params[:r] = v }
   opt.on('-l', '--long', 'List in long format.') { |v| params[:l] = v }
   opt.parse!(ARGV)
   params
@@ -42,7 +44,13 @@ def ls_without_options(files)
 end
 
 def ls(params)
-  files = Dir.glob('*', sort: true)
+  files = if params[:a]
+            Dir.glob('*', File::FNM_DOTMATCH, sort: true)
+          else
+            Dir.glob('*', sort: true)
+          end
+  files.reverse! if params[:r]
+
   params[:l] ? ls_long_format(files) : ls_without_options(files)
 end
 
@@ -74,16 +82,18 @@ def change_mode_notation(file_mode)
 end
 
 def display_file_details(file_stats, file_nlinks, file_sizes)
+  nlinks_digit = file_nlinks.max.to_s.length
+  sizes_digit = file_sizes.max.to_s.length
   file_stats.each do |file_stat|
     file_types = change_file_type_notation(file_stat[:mode][0, 3])
     file_modes = change_mode_notation(file_stat[:mode][3, 3]).join
 
     formatted_stat = [
       "#{file_types}#{file_modes} ",
-      format("%#{file_nlinks.max.to_s.length}d", file_stat[:nlink]),
+      format("%#{nlinks_digit}d", file_stat[:nlink]),
       file_stat[:owner],
       file_stat[:group],
-      format("%#{file_sizes.max.to_s.length}d", file_stat[:size]),
+      format("%#{sizes_digit}d", file_stat[:size]),
       file_stat[:timestamp],
       file_stat[:filename]
     ]
