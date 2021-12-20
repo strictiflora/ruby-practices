@@ -48,21 +48,20 @@ def add_total(numbers_of_lines, word_counts, byte_sizes, files)
   files << 'total'
 end
 
-def display_file_info(numbers_of_lines, word_counts, byte_sizes, files)
-  add_total(numbers_of_lines, word_counts, byte_sizes, files) if ARGV.size > 1
-  [
-    adjust_digit(numbers_of_lines),
-    adjust_digit(word_counts),
-    adjust_digit(byte_sizes),
-    files
-  ].transpose.each { |file_info| puts "  #{file_info.join(' ')}" }
-end
-
-def dispay_file_info_with_option_l(numbers_of_lines, word_counts, byte_sizes, files)
+def display_file_info(params, numbers_of_lines, word_counts, byte_sizes, files)
   add_total(numbers_of_lines, word_counts, byte_sizes, files) if ARGV.size > 1
 
-  [adjust_digit(numbers_of_lines), files].transpose.each do |file_info|
-    puts "  #{file_info.join(' ')}"
+  if params[:l]
+    [adjust_digit(numbers_of_lines), files].transpose.each do |file_info|
+      puts "  #{file_info.join(' ')}"
+    end
+  else
+    [
+      adjust_digit(numbers_of_lines),
+      adjust_digit(word_counts),
+      adjust_digit(byte_sizes),
+      files
+    ].transpose.each { |file_info| puts "  #{file_info.join(' ')}" }
   end
 end
 
@@ -77,14 +76,8 @@ def wc(params)
   if ARGV.empty?
     lines = readlines
     params[:l] ? puts("      #{lines.count}") : puts("      #{count(lines).join('     ')}")
-  elsif ARGV.size > 1 && params[:l]
-    dispay_file_info_with_option_l(numbers_of_lines, word_counts, byte_sizes, files)
-  elsif ARGV.size > 1
-    display_file_info(numbers_of_lines, word_counts, byte_sizes, files)
-  elsif params[:l]
-    dispay_file_info_with_option_l(numbers_of_lines, word_counts, byte_sizes, files)
   else
-    display_file_info(numbers_of_lines, word_counts, byte_sizes, files)
+    display_file_info(params, numbers_of_lines, word_counts, byte_sizes, files)
   end
 end
 
