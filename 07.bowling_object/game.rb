@@ -23,7 +23,7 @@ class Game
     frames << frame
   end
 
-  def scores
+  def calculate_score
     total = 0
     @frames.each_with_index do |f, i|
       frame = Frame.new(*f)

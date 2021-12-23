@@ -15,14 +15,14 @@ class Frame
   end
 
   def score
-    [@first_shot.score, @second_shot.score, @third_shot.score].sum
+    [first_shot.score, second_shot.score, third_shot.score].sum
   end
 
   def strike?
-    @first_shot.score == STRIKE && @second_shot.mark.nil? && @third_shot.mark.nil?
+    first_shot.score == STRIKE && second_shot.mark.nil? && third_shot.mark.nil?
   end
 
   def spare?
-    !strike? && [@first_shot.score, @second_shot.score].sum == SPARE && @third_shot.mark.nil?
+    !strike? && [first_shot.score, second_shot.score].sum == SPARE && third_shot.mark.nil?
   end
 end
