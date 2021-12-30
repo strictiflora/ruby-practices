@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'path'
-
 module LS
   class ShortFormat
     NUM_OF_ROWS = 3
@@ -33,9 +31,13 @@ module LS
           columns << column
         end
       end
+
+      rows = []
       adjust_digits(columns).transpose.each do |row|
-        puts row.join('      ')
+        rows << row.join('      ')
       end
+
+      rows.join("\n")
     end
   end
 end

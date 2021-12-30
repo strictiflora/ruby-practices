@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'etc'
-require_relative 'path'
 
 module LS
   class LongFormat
@@ -40,6 +39,7 @@ module LS
       nlinks_digit = file_nlinks.max.to_s.length
       sizes_digit = file_sizes.max.to_s.length
 
+      formatted_stats = []
       file_stats.each do |file_stat|
         file_types = change_file_type_notation(file_stat[:mode][0, 3])
         file_modes = change_mode_notation(file_stat[:mode][3, 3]).join
@@ -55,8 +55,9 @@ module LS
         ]
 
         formatted_stat << "-> #{File.readlink(file_stat[:filename].to_s)}" if formatted_stat[0][0] == 'l'
-        puts formatted_stat.join(' ')
+        formatted_stats << formatted_stat.join(' ')
       end
+      formatted_stats
     end
 
     def build_stats(file_status, file)
@@ -84,8 +85,9 @@ module LS
         file_stats << build_stats(fs, path)
       end
 
-      puts "total #{blocks}" unless @paths.empty?
-      display_file_details(file_stats, file_nlinks, file_sizes)
+      total = "total #{blocks}" unless @paths.empty?
+      details = display_file_details(file_stats, file_nlinks, file_sizes)
+      [total, details].join("\n")
     end
   end
 end

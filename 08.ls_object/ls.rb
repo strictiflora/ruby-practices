@@ -1,16 +1,19 @@
 # frozen_string_literal: true
 
 require_relative 'command'
+require_relative 'short_format'
+require_relative 'long_format'
+require_relative 'path'
 
-def receive_options
-  opt = OptionParser.new
-  params = {}
-  opt.on('-a', '--all', 'Include directory entries whose names begin with a dot') { |v| params[:a] = v }
-  opt.on('-r', '--reverse', 'Reverse the order') { |v| params[:r] = v }
-  opt.on('-l', '--long', 'List in long format.') { |v| params[:l] = v }
-  opt.parse!(ARGV)
-  params
-end
+opt = OptionParser.new
+params = {}
+opt.on('-a') { |v| params[:a] = v }
+opt.on('-r') { |v| params[:r] = v }
+opt.on('-l') { |v| params[:l] = v }
+opt.parse!(ARGV)
 
-ls = LS::Command.new(receive_options)
-ls.execute
+paths = LS::Path.new(params).paths
+long_format = LS::LongFormat.new(paths)
+short_format = LS::ShortFormat.new(paths)
+ls = LS::Command.new(params, long_format, short_format)
+puts ls.execute

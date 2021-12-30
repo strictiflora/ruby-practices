@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
 require 'optparse'
-require_relative 'short_format'
-require_relative 'long_format'
 
 module LS
   class Command
-    def initialize(params)
+    def initialize(params, long_format, short_format)
       @params = params
+      @long_format = long_format
+      @short_format = short_format
       @list = short_or_long
     end
 
     def short_or_long
-      @params[:l] ? LS::LongFormat.new(LS::Path.new(@params).paths) : LS::ShortFormat.new(LS::Path.new(@params).paths)
+      @params[:l] ? @long_format : @short_format
     end
 
     def execute
