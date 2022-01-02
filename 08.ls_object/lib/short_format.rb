@@ -8,15 +8,6 @@ module LS
       @paths = paths
     end
 
-    def adjust_digits(columns)
-      columns.map do |column|
-        digit = column.max_by(&:length).length
-        column.map do |path|
-          format("%-#{digit}s", path) unless path == ''
-        end
-      end
-    end
-
     def display
       files = @paths
       unless (@paths.size % NUM_OF_ROWS).zero?
@@ -38,6 +29,17 @@ module LS
       end
 
       rows.join("\n")
+    end
+
+    private
+
+    def adjust_digits(columns)
+      columns.map do |column|
+        digit = column.max_by(&:length).length
+        column.map do |path|
+          format("%-#{digit}s", path) unless path == ''
+        end
+      end
     end
   end
 end

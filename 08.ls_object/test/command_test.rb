@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require_relative '../command'
-require_relative '../long_format'
-require_relative '../short_format'
+require_relative '../lib/command'
+require_relative '../lib/long_format'
+require_relative '../lib/short_format'
 
 class LS::CommandTest < Minitest::Test
   # /test/dummyで実行

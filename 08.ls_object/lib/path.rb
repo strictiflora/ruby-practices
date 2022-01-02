@@ -10,6 +10,8 @@ module LS
       @paths = reverse_or_not
     end
 
+    private
+
     def dotmatch_or_not
       @params[:a] ? Dir.glob('*', File::FNM_DOTMATCH, sort: true) : Dir.glob('*', sort: true)
     end

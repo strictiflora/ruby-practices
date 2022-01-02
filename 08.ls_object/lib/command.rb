@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'optparse'
-
 module LS
   class Command
     def initialize(params, long_format, short_format)
@@ -11,12 +9,14 @@ module LS
       @list = short_or_long
     end
 
-    def short_or_long
-      @params[:l] ? @long_format : @short_format
-    end
-
     def execute
       @list.display
+    end
+
+    private
+
+    def short_or_long
+      @params[:l] ? @long_format : @short_format
     end
   end
 end

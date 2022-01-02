@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require_relative '../long_format'
+require_relative '../lib/long_format'
 
 class LS::LongFormatTest < Minitest::Test
   # /test/dummyで実行

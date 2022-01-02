@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'optparse'
 require_relative 'command'
 require_relative 'short_format'
 require_relative 'long_format'

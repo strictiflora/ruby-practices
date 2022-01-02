@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require_relative '../short_format'
+require_relative '../lib/short_format'
 
 class LS::ShortFormatTest < Minitest::Test
-  # /test/dummyで実行
   def test_short_format1
     expected = <<~TEXT.chomp
       567.txt      Sample.txt      sample.text

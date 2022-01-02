@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require_relative '../path'
+require_relative '../lib/path'
 
 class LS::PathTest < Minitest::Test
   # /test/dummyで実行
