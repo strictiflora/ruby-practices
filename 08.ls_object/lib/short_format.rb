@@ -9,25 +9,17 @@ module LS
     end
 
     def display
-      files = @paths
-      unless (@paths.size % NUM_OF_ROWS).zero?
-        (NUM_OF_ROWS - @paths.size % NUM_OF_ROWS).times do
-          files += ['']
-        end
-      end
+      diff = 0
+      diff = (NUM_OF_ROWS - @paths.size % NUM_OF_ROWS) unless (@paths.size % NUM_OF_ROWS).zero?
+      blanks = Array.new(diff) { '' }
+      paths = [*@paths, *blanks]
 
-      columns = []
-      unless files.empty?
-        files.each_slice(files.size / NUM_OF_ROWS) do |column|
-          columns << column
-        end
-      end
+      return if paths.empty?
 
-      rows = []
-      adjust_digits(columns).transpose.each do |row|
-        rows << row.join('      ')
+      columns = paths.each_slice(paths.size / NUM_OF_ROWS).to_a
+      rows = adjust_digits(columns).transpose.map do |row|
+        row.join('      ')
       end
-
       rows.join("\n")
     end
 
