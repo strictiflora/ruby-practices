@@ -4,19 +4,45 @@ require 'etc'
 
 module LS
   class Stat
-    attr_reader :mode, :nlink, :owner, :group, :size, :timestamp, :name, :block, :link
-
     def initialize(path)
-      stat = File.lstat(path)
-      @mode = combine_type_with_mode(stat)
-      @nlink = stat.nlink
-      @owner = Etc.getpwuid(stat.uid).name
-      @group = Etc.getgrgid(stat.gid).name
-      @size = stat.size
-      @timestamp = stat.mtime.strftime('%_m %e %H:%M')
-      @name = path
-      @block = stat.blocks
-      @link = File.readlink(path) if @mode[0] == 'l'
+      @stat = File.lstat(path)
+      @path = path
+    end
+
+    def mode
+      combine_type_with_mode(@stat)
+    end
+
+    def nlink
+      @stat.nlink
+    end
+
+    def owner
+      Etc.getpwuid(@stat.uid).name
+    end
+
+    def group
+      Etc.getgrgid(@stat.gid).name
+    end
+
+    def size
+      @stat.size
+    end
+
+    def timestamp
+      @stat.mtime
+    end
+
+    def block
+      @stat.blocks
+    end
+
+    def name
+      @path
+    end
+
+    def link
+      File.readlink(@path) if mode[0] == 'l'
     end
 
     private

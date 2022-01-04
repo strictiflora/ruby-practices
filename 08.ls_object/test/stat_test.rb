@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
+require 'time'
 require_relative '../lib/stat'
 
 class LS::StatTest < Minitest::Test
@@ -31,7 +32,7 @@ class LS::StatTest < Minitest::Test
   end
 
   def test_stat6
-    expected = '12 30 13:53'
+    expected = Time.parse('2021-12-30 13:53:50.505999084 +0900')
     assert_equal expected, LS::Stat.new('567.txt').timestamp
   end
 

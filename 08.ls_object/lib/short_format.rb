@@ -29,7 +29,7 @@ module LS
       columns.map do |column|
         digit = column.max_by(&:length).length
         column.map do |path|
-          format("%-#{digit}s", path) unless path == ''
+          format("%-#{digit}s", path) unless path.empty?
         end
       end
     end

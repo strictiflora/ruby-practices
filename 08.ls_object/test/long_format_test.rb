@@ -29,7 +29,7 @@ class LS::LongFormatTest < Minitest::Test
     expected = <<~TEXT.chomp
       total 56
       drwxr-xr-x  14 kino  staff   448 12 30 18:04 .
-      drwxr-xr-x   8 kino  staff   256  1  2 16:12 ..
+      drwxr-xr-x   6 kino  staff   192  1  4 14:28 ..
       -rw-------   1 kino  staff  1536 12 30 13:53 567.txt
       -rw-------   1 kino  staff  1024 12 30 13:54 73.txt
       -rw-r--r--   1 kino  staff     0 12 30 13:56 Apple
@@ -82,7 +82,7 @@ class LS::LongFormatTest < Minitest::Test
       -rw-r--r--   1 kino  staff     0 12 30 13:56 Apple
       -rw-------   1 kino  staff  1024 12 30 13:54 73.txt
       -rw-------   1 kino  staff  1536 12 30 13:53 567.txt
-      drwxr-xr-x   8 kino  staff   256  1  2 16:12 ..
+      drwxr-xr-x   6 kino  staff   192  1  4 14:28 ..
       drwxr-xr-x  14 kino  staff   448 12 30 18:04 .
     TEXT
     paths = ['zzz.txt', 'zz.txt', 'z.txt', 'sample.text', 'dummy.txt', 'directory', 'defgh.txt', 'Sample.txt', 'CDE', 'Apple', '73.txt', '567.txt', '..', '.']

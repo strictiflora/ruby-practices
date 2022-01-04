@@ -22,10 +22,10 @@ module LS
 
     def find_max_digits(stats)
       {
-        'nlink' => stats.map(&:nlink).max.to_s.length,
-        'owner' => stats.map(&:owner).max_by(&:length).length,
-        'group' => stats.map(&:group).max_by(&:length).length,
-        'size' => stats.map(&:size).max.to_s.length
+        nlink: stats.max_by(&:nlink).nlink.to_s.length,
+        owner: stats.max_by { |stat| stat.owner.length }.owner.length,
+        group: stats.max_by { |stat| stat.group.length }.group.length,
+        size: stats.max_by(&:size).size.to_s.length
       }
     end
 
@@ -34,11 +34,11 @@ module LS
       stats.map do |stat|
         formatted_stat = [
           "#{stat.mode} ",
-          format("%#{max_digits['nlink']}d", stat.nlink),
-          format("%#{max_digits['owner']}s ", stat.owner),
-          format("%#{max_digits['group']}s ", stat.group),
-          format("%#{max_digits['size']}d", stat.size),
-          stat.timestamp,
+          format("%#{max_digits[:nlink]}d", stat.nlink),
+          format("%#{max_digits[:owner]}s ", stat.owner),
+          format("%#{max_digits[:group]}s ", stat.group),
+          format("%#{max_digits[:size]}d", stat.size),
+          stat.timestamp.strftime('%_m %e %H:%M'),
           stat.name
         ]
 
