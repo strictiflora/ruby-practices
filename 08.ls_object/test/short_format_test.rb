@@ -3,7 +3,7 @@
 require 'minitest/autorun'
 require_relative '../lib/short_format'
 
-class LS::ShortFormatTest < Minitest::Test
+class LS::ShortFormatterTest < Minitest::Test
   def test_short_format1
     expected = <<~TEXT.chomp
       567.txt      Sample.txt      sample.text
@@ -12,7 +12,7 @@ class LS::ShortFormatTest < Minitest::Test
       CDE          dummy.txt       zzz.txt    
     TEXT
     paths = ['567.txt', '73.txt', 'Apple', 'CDE', 'Sample.txt', 'defgh.txt', 'directory', 'dummy.txt', 'sample.text', 'z.txt', 'zz.txt', 'zzz.txt']
-    assert_equal expected, LS::ShortFormat.new(paths).display
+    assert_equal expected, LS::ShortFormatter.new(paths).display
   end
 
   def test_short_format2
@@ -24,7 +24,7 @@ class LS::ShortFormatTest < Minitest::Test
       Apple        dummy.txt       
     TEXT
     paths = ['.', '..', '567.txt', '73.txt', 'Apple', 'CDE', 'Sample.txt', 'defgh.txt', 'directory', 'dummy.txt', 'sample.text', 'z.txt', 'zz.txt', 'zzz.txt']
-    assert_equal expected, LS::ShortFormat.new(paths).display
+    assert_equal expected, LS::ShortFormatter.new(paths).display
   end
 
   def test_short_format3
@@ -35,7 +35,7 @@ class LS::ShortFormatTest < Minitest::Test
       sample.text      Sample.txt      567.txt
     TEXT
     paths = ['zzz.txt', 'zz.txt', 'z.txt', 'sample.text', 'dummy.txt', 'directory', 'defgh.txt', 'Sample.txt', 'CDE', 'Apple', '73.txt', '567.txt']
-    assert_equal expected, LS::ShortFormat.new(paths).display
+    assert_equal expected, LS::ShortFormatter.new(paths).display
   end
 
   def test_short_format4
@@ -47,6 +47,6 @@ class LS::ShortFormatTest < Minitest::Test
       dummy.txt        Apple           
     TEXT
     paths = ['zzz.txt', 'zz.txt', 'z.txt', 'sample.text', 'dummy.txt', 'directory', 'defgh.txt', 'Sample.txt', 'CDE', 'Apple', '73.txt', '567.txt', '..', '.']
-    assert_equal expected, LS::ShortFormat.new(paths).display
+    assert_equal expected, LS::ShortFormatter.new(paths).display
   end
 end

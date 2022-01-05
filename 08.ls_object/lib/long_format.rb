@@ -3,15 +3,13 @@
 require_relative 'stat'
 
 module LS
-  class LongFormat
+  class LongFormatter
     def initialize(paths)
       @paths = paths
     end
 
     def display
       stats = @paths.map { |path| LS::Stat.new(path) }
-
-      return if @paths.empty?
 
       blocks = stats.map(&:block)
       total = "total #{blocks.sum}"

@@ -11,7 +11,7 @@ opt.on('-r') { |v| params[:r] = v }
 opt.on('-l') { |v| params[:l] = v }
 opt.parse!(ARGV)
 
-paths = params[:a] ? Dir.glob('*', File::FNM_DOTMATCH, sort: true) : Dir.glob('*', sort: true)
+paths = params[:a] ? Dir.glob('*', File::FNM_DOTMATCH) : Dir.glob('*')
 paths = paths.reverse if params[:r]
-format = params[:l] ? LS::LongFormat.new(paths) : LS::ShortFormat.new(paths)
+format = params[:l] ? LS::LongFormatter.new(paths) : LS::ShortFormatter.new(paths)
 puts format.display

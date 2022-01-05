@@ -1,23 +1,18 @@
 # frozen_string_literal: true
 
 module LS
-  class ShortFormat
-    NUM_OF_ROWS = 3
+  class ShortFormatter
+    NUM_OF_COLUMNS = 3.0
 
     def initialize(paths)
       @paths = paths
     end
 
     def display
-      diff = 0
-      diff = (NUM_OF_ROWS - @paths.size % NUM_OF_ROWS) unless (@paths.size % NUM_OF_ROWS).zero?
-      blanks = Array.new(diff) { '' }
-      paths = [*@paths, *blanks]
-
-      return if paths.empty?
-
-      columns = paths.each_slice(paths.size / NUM_OF_ROWS).to_a
-      rows = adjust_digits(columns).transpose.map do |row|
+      num_of_rows = (@paths.size / NUM_OF_COLUMNS).ceil
+      columns = @paths.each_slice(num_of_rows).to_a
+      columns = adjust_digits(columns).map { |column| column.values_at(0...num_of_rows) }
+      rows = columns.transpose.map do |row|
         row.join('      ')
       end
       rows.join("\n")
@@ -29,7 +24,7 @@ module LS
       columns.map do |column|
         digit = column.max_by(&:length).length
         column.map do |path|
-          format("%-#{digit}s", path) unless path.empty?
+          format("%-#{digit}s", path)
         end
       end
     end
