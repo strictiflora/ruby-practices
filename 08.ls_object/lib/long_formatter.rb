@@ -13,7 +13,7 @@ module LS
 
       blocks = stats.map(&:block)
       total = "total #{blocks.sum}"
-      [total, format_stat(stats)].join("\n")
+      [total, format_stats(stats)].join("\n")
     end
 
     private
@@ -27,10 +27,10 @@ module LS
       }
     end
 
-    def format_stat(stats)
+    def format_stats(stats)
       max_digits = find_max_digits(stats)
       stats.map do |stat|
-        formatted_stat = [
+        formatted_stats = [
           "#{stat.mode} ",
           format("%#{max_digits[:nlink]}d", stat.nlink),
           format("%#{max_digits[:owner]}s ", stat.owner),
@@ -40,8 +40,8 @@ module LS
           stat.name
         ]
 
-        formatted_stat << "-> #{stat.link}" if stat.link
-        formatted_stat.join(' ')
+        formatted_stats << "-> #{stat.link}" if stat.link
+        formatted_stats.join(' ')
       end
     end
   end
