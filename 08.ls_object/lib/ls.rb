@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require 'optparse'
-require_relative 'short_format'
-require_relative 'long_format'
+require_relative 'short_formatter'
+require_relative 'long_formatter'
 
 opt = OptionParser.new
 params = {}

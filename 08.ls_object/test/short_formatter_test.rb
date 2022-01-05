@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require_relative '../lib/short_format'
+require_relative '../lib/short_formatter'
 
 class LS::ShortFormatterTest < Minitest::Test
   def test_short_format1
