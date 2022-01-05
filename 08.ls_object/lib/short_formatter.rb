@@ -11,8 +11,9 @@ module LS
     def display
       num_of_rows = (@paths.size / NUM_OF_COLUMNS).ceil
       columns = @paths.each_slice(num_of_rows).to_a
-      columns = adjust_digits(columns).map { |column| column.values_at(0...num_of_rows) }
-      rows = columns.transpose.map do |row|
+      adjusted_columns = adjust_digits(columns)
+      adjusted_columns[-1] = adjusted_columns[-1].values_at(0...num_of_rows)
+      rows = adjusted_columns.transpose.map do |row|
         row.join('      ')
       end
       rows.join("\n")
